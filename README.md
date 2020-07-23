@@ -43,3 +43,6 @@ EOF
 * **csp_allow_img** List of places to allow CSP to load images from. Defaults to include `data:` URLs. Always includes `'self'`.
 * **csp_allow_font** List of places to allow CSP to load fonts from. Defaults to allow `https://fonts.gstatic.com`. Always includes `'self'`.
 
+### Outputs
+* **url** The URL on which the home page of the website can be reached
+* **alternate_urls** Alternate URLs which also point to the same home page as *url* does
