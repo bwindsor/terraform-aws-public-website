@@ -28,6 +28,10 @@ exports.env = {cspData: {
     font: [
         "'self'",
         "${join("\",\n\"", var.csp_allow_font)}",
+    ],
+    frame: [
+        "'self'",
+        "${join("\",\n\"", var.csp_allow_frame)}",
     ]
 }};
 EOF

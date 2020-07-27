@@ -1,69 +1,74 @@
 variable "profile" {
-  description = "AWS credential profile to use for deployment"
+  description = "The name of the AWS credentials profile you have set up on your computer to use for this deployment"
   type = string
 }
 
 variable "deployment_name" {
-  description = "Deployment name. This is used as a unique prefix on resource names/ids to stop clashes."
+  description = "A unique string to use for this module to make sure resources do not clash with others"
   type = string
 }
 
 variable "website_dir" {
-  description = "Directory containing your website"
+  description = "A folder containing all the files for your website. The contents of this folder, including all subfolders, will be stored in an S3 website and served as your website"
 }
 variable "additional_files" {
-  description = "Mapping from website S3 key to file content"
+  description = "A mapping from file name (in S3) to file contents. For each (key,value) pair, a file will be created in S3 with the given key, with contents given by value"
   type        = map(string)
   default     = {}
 }
 variable "hosted_zone_name" {
-  description = "Name of the already existing hosted zone in which SSL certificates will be created"
+  description = "The name of the hosted zone in Route53 where the SSL certificates will be created"
   type = string
 }
 variable "custom_domain" {
-  description = "Custom domain name to use"
+  description = "The primary domain name to use for the website"
   type        = string
 }
 variable "alternative_custom_domains" {
-  description = "Alternative custom domains which will redirect to the custom domain"
+  description = "A list of any alternative domain names. Typically this would just contain the same as custom_domain but prefixed by www."
   type        = list(string)
   default     = []
 }
 
 variable "template_file_vars" {
-  description = "Variables to substitute into any file with .template. in its name"
+  description = "A mapping from substitution variable name to value. Any files inside `website_dir` which end in `.template` will be processed by Terraform's template provider, passing these variables for substitution. The file will have the `.template` suffix removed when uploaded to S3."
   type        = map(string)
   default     = {}
 }
 
 variable "is_spa" {
-  description = "Whether this is a Single Page App. If so, all would-be 404 errors are returned as 200 and the contents of index.html"
+  description = "If your website is a single page application (SPA), this sets up the cloudfront redirects such that whenever an item is not found, the file `index.html` is returned instead."
   default     = false
 }
 
 variable "csp_allow_default" {
+  description = "List of default domains to include in the Content Security Policy. Typically you would list the URL of your API here if your pages access that. Always includes `'self'`."
   type    = list(string)
   default = []
 }
 
 variable "csp_allow_style" {
+  description = "List of places to allow CSP to load styles from. Always includes `'self'`"
   type = list(string)
-  default = [
-    "'unsafe-inline'",
-    "https://fonts.googleapis.com"
-  ]
+  default = []
 }
 
 variable "csp_allow_img" {
+  description = "List of places to allow CSP to load images from. Always includes `'self'`"
   type = list(string)
-  default = [
-    "data:"
-  ]
+  default = []
 }
 
 variable "csp_allow_font" {
+  description = "List of places to allow CSP to load fonts from. Always includes `'self'`"
   type = list(string)
   default = [
     "https://fonts.gstatic.com"
   ]
+}
+
+variable "csp_allow_frame" {
+  description = "List of places to allow CSP to load iframes from. Always includes `'self'`"
+  type = list(string)
+  default = []
 }

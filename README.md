@@ -22,9 +22,10 @@ EOF
     template_file_vars = { api_url = "api.mysite.com" }
     is_spa = false
     csp_allow_default = ["api.mysite.com"]
-    csp_allow_style = []
-    csp_allow_img = []
+    csp_allow_style = ["'unsafe-inline'"]
+    csp_allow_img = ["data:"]
     csp_allow_font = []
+    csp_allow_frame = []
 }
 ```
 
@@ -36,12 +37,13 @@ EOF
 * **hosted_zone_name** The name of the hosted zone in Route53 where the SSL certificates will be created
 * **custom_domain** The primary domain name to use for the website
 * **alternative_custom_domains** A list of any alternative domain names. Typically this would just contain the same as *custom_domain* but prefixed by `www.`
-* **template_file_vars** A mapping from substitution variable name to value. Any files inside `website_dir` which end in `.template` will be processed by Terraform's template provider, passing these variables for substitution. The file will have the `.template` suffix removed when uploaded to S3.
-* **is_spa** If your website is a single page application (SPA), this sets up the cloudfront redirects such that whenever an item is not found, the file `index.html` is returned instead.
-* **csp_allow_default** List of default domains to include in the Content Security Policy. Typically you would list the URL of your API here if your pages access that. Always includes `'self'`.
-* **csp_allow_style** List of places to allow CSP to load styles from. Defaults to include `unsafe-inline` and `https://fonts.googleapis.com`. Always includes `'self'`.
-* **csp_allow_img** List of places to allow CSP to load images from. Defaults to include `data:` URLs. Always includes `'self'`.
-* **csp_allow_font** List of places to allow CSP to load fonts from. Defaults to allow `https://fonts.gstatic.com`. Always includes `'self'`.
+* **template_file_vars** A mapping from substitution variable name to value. Any files inside `website_dir` which end in `.template` will be processed by Terraform's template provider, passing these variables for substitution. The file will have the `.template` suffix removed when uploaded to S3
+* **is_spa** If your website is a single page application (SPA), this sets up the cloudfront redirects such that whenever an item is not found, the file `index.html` is returned instead
+* **csp_allow_default** List of default domains to include in the Content Security Policy. Typically you would list the URL of your API here if your pages access that. Always includes `'self'`
+* **csp_allow_style** List of places to allow CSP to load styles from. Always includes `'self'`
+* **csp_allow_img** List of places to allow CSP to load images from. Always includes `'self'`
+* **csp_allow_font** List of places to allow CSP to load fonts from. Always includes `'self'`
+* **csp_allow_frame** List of places to allow CSP to load iframes from. Always includes `'self'`
 
 ### Outputs
 * **url** The URL on which the home page of the website can be reached
