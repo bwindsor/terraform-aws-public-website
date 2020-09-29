@@ -8,7 +8,6 @@ The website files are hosted in an S3 bucket which is also created by the module
 module "website" {
     source = "bwindsor/public-website"
     
-    profile = "default"
     deployment_name = "tf-my-project"
     website_dir = "${path.root}/website_files"
     additional_files = { "config.yaml" = <<EOF
@@ -30,7 +29,8 @@ EOF
 ```
 
 ### Inputs
-* **profile** The name of the AWS credentials profile you have set up on your computer to use for this deployment
+Ensure environment variables `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` are set.
+
 * **deployment_name** A unique string to use for this module to make sure resources do not clash with others
 * **website_dir** A folder containing all the files for your website. The contents of this folder, including all subfolders, will be stored in an S3 website and served as your website
 * **additional_files** A mapping from file name (in S3) to file contents. For each (key,value) pair, a file will be created in S3 with the given key, with contents given by value

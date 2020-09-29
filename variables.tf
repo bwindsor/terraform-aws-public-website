@@ -1,8 +1,3 @@
-variable "profile" {
-  description = "The name of the AWS credentials profile you have set up on your computer to use for this deployment"
-  type = string
-}
-
 variable "deployment_name" {
   description = "A unique string to use for this module to make sure resources do not clash with others"
   type = string
