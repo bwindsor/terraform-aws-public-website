@@ -25,12 +25,18 @@ resource "aws_acm_certificate" "ssl_certificate" {
 }
 
 resource "aws_route53_record" "ssl_cert_validation" {
-  count = 1 + length(aws_acm_certificate.ssl_certificate.subject_alternative_names)
+  for_each = {
+    for dvo in aws_acm_certificate.ssl_certificate.domain_validation_options: dvo.domain_name => {
+      name = dvo.resource_record_name
+      record = dvo.resource_record_value
+      type = dvo.resource_record_type
+    }
+  }
 
-  name    = aws_acm_certificate.ssl_certificate.domain_validation_options[count.index].resource_record_name
-  type    = aws_acm_certificate.ssl_certificate.domain_validation_options[count.index].resource_record_type
+  name    = each.value.name
+  type    = each.value.type
   zone_id = data.aws_route53_zone.hosted_zone.id
-  records = [aws_acm_certificate.ssl_certificate.domain_validation_options[count.index].resource_record_value]
+  records = [each.value.record]
   ttl     = 60
 
   provider = aws.protected-website-us-east-1
@@ -38,7 +44,7 @@ resource "aws_route53_record" "ssl_cert_validation" {
 
 resource "aws_acm_certificate_validation" "main_website_cert" {
   certificate_arn         = aws_acm_certificate.ssl_certificate.arn
-  validation_record_fqdns = aws_route53_record.ssl_cert_validation.*.fqdn
+  validation_record_fqdns = [for validation in aws_route53_record.ssl_cert_validation: validation.fqdn]
   provider                = aws.protected-website-us-east-1
 }
 
@@ -54,15 +60,15 @@ resource "aws_route53_record" "main_website_A" {
   }
 }
 resource "aws_route53_record" "main_website_alternatives" {
-  count = length(aws_acm_certificate.ssl_certificate.subject_alternative_names)
+  for_each = aws_acm_certificate.ssl_certificate.subject_alternative_names
 
-  name    = aws_acm_certificate.ssl_certificate.subject_alternative_names[count.index]
+  name    = each.value
   type    = "A"
   zone_id = data.aws_route53_zone.hosted_zone.id
 
   alias {
     evaluate_target_health = true
-    name                   = aws_cloudfront_distribution.alternative_domain_distributions[count.index].domain_name
+    name                   = aws_cloudfront_distribution.alternative_domain_distributions[each.value].domain_name
     zone_id                = local.AWS_CLOUDFRONT_HOSTED_ZONE_ID
   }
 }

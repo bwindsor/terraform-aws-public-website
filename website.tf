@@ -54,9 +54,9 @@ resource "aws_s3_bucket" "website" {
 }
 
 resource "aws_s3_bucket" "website_alternative_redirect" {
-  count = length(var.alternative_custom_domains)
+  for_each = var.alternative_custom_domains
 
-  bucket        = "${lower(var.deployment_name)}-website-alternative-${count.index}"
+  bucket        = "${lower(var.deployment_name)}-website-alternative-${substr(sha256(each.value), 0, 8)}"
   acl           = "private"
   force_destroy = true
 

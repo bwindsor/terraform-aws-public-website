@@ -77,13 +77,13 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
 
 
 resource "aws_cloudfront_distribution" "alternative_domain_distributions" {
-  count = length(var.alternative_custom_domains)
+  for_each = var.alternative_custom_domains
 
   tags = {
-    Name = "${var.deployment_name}-website-alternative-${count.index}"
+    Name = "${var.deployment_name}-website-alternative-${each.value}"
   }
   origin {
-    domain_name = aws_s3_bucket.website_alternative_redirect[count.index].website_endpoint
+    domain_name = aws_s3_bucket.website_alternative_redirect[each.value].website_endpoint
     origin_id   = local.s3_origin_id
     custom_origin_config {
       http_port              = 80
@@ -122,7 +122,7 @@ resource "aws_cloudfront_distribution" "alternative_domain_distributions" {
     }
   }
 
-  aliases = [var.alternative_custom_domains[count.index]]
+  aliases = [each.value]
 
   viewer_certificate {
     acm_certificate_arn = aws_acm_certificate_validation.main_website_cert.certificate_arn

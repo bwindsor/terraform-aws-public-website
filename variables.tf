@@ -20,8 +20,8 @@ variable "custom_domain" {
   type        = string
 }
 variable "alternative_custom_domains" {
-  description = "A list of any alternative domain names. Typically this would just contain the same as custom_domain but prefixed by www."
-  type        = list(string)
+  description = "A set of any alternative domain names. Typically this would just contain the same as custom_domain but prefixed by www."
+  type        = set(string)
   default     = []
 }
 
