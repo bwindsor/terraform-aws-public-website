@@ -50,12 +50,12 @@ resource "aws_lambda_function" "lambda_add_security_headers" {
   timeout          = 2
   memory_size      = 128
   publish          = true
-  provider         = aws.protected-website-us-east-1
+  provider         = aws.us-east-1
 }
 
 resource "aws_iam_role" "iam_for_lambda_edge" {
   name               = "${var.deployment_name}-iam_for_lambda_edge"
-  provider           = aws.protected-website-us-east-1
+  provider           = aws.us-east-1
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
