@@ -25,6 +25,7 @@ EOF
     csp_allow_img = ["data:"]
     csp_allow_font = []
     csp_allow_frame = []
+    mime_types = {}
 }
 ```
 
@@ -44,6 +45,7 @@ Ensure environment variables `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` are
 * **csp_allow_img** List of places to allow CSP to load images from. Always includes `'self'`
 * **csp_allow_font** List of places to allow CSP to load fonts from. Always includes `'self'`
 * **csp_allow_frame** List of places to allow CSP to load iframes from. Always includes `'self'`
+* **mime_types** Map from file extension to MIME type. Defaults are provided, but you will need to provide any unusual extensions with a MIME type
 
 ### Outputs
 * **url** The URL on which the home page of the website can be reached

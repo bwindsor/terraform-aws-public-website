@@ -67,3 +67,9 @@ variable "csp_allow_frame" {
   type = list(string)
   default = []
 }
+
+variable "mime_types" {
+  description = "Map from file extension to MIME type. Defaults are provided, but you will need to provide any unusual extensions with a MIME type"
+  default = {}
+  type = map(string)
+}
