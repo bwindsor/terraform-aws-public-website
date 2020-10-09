@@ -60,7 +60,7 @@ resource "aws_route53_record" "main_website_A" {
   }
 }
 resource "aws_route53_record" "main_website_alternatives" {
-  for_each = aws_acm_certificate.ssl_certificate.subject_alternative_names
+  for_each = var.alternative_custom_domains
 
   name    = each.value
   type    = "A"
