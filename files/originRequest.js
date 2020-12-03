@@ -3,10 +3,10 @@ const environment = require('./environment.js').env;
 
 const r = JSON.parse(environment.redirectsJson);
 const redirects = {};
-for (let i = 0; i < redirects.length; i++) {
-    redirects[r[i].source] = redirects[r[i]].target;
+for (let i = 0; i < r.length; i++) {
+    redirects[r[i].source] = r[i].target;
 }
-console.log(redirects);
+console.info(redirects);
 
 
 exports.redirect = (event, context, callback) => {
