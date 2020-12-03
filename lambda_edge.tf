@@ -54,7 +54,7 @@ resource "aws_lambda_function" "lambda_add_security_headers" {
 }
 
 data "archive_file" "lambda_origin_request" {
-  for_each = var.redirects == null ? [] : ["0"]
+  for_each = var.redirects == null ? toset([]) : toset(["0"])
 
   type        = "zip"
   output_path = "${path.root}/.terraform/artifacts/${var.deployment_name}originRequest.zip"
