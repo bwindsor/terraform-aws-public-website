@@ -76,12 +76,12 @@ resource "aws_lambda_function" "lambda_redirects" {
   for_each = data.archive_file.lambda_origin_request
 
   description      = "Lambda@Edge function to handle redirects on cloudfront requests"
-  filename         = data.archive_file.lambda_origin_request.output_path
+  filename         = each.value.output_path
   function_name    = "${var.deployment_name}-lambda-handle-redirects"
   role             = aws_iam_role.iam_for_lambda_edge.arn
   handler          = "originRequest.redirect"
   runtime          = "nodejs10.x"
-  source_code_hash = data.archive_file.lambda_origin_request.output_base64sha256
+  source_code_hash = each.value.output_base64sha256
   timeout          = 2
   memory_size      = 128
   publish          = true
