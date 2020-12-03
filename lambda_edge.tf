@@ -53,6 +53,41 @@ resource "aws_lambda_function" "lambda_add_security_headers" {
   provider         = aws.us-east-1
 }
 
+data "archive_file" "lambda_origin_request" {
+  for_each = var.redirects == null ? [] : ["0"]
+
+  type        = "zip"
+  output_path = "${path.root}/.terraform/artifacts/${var.deployment_name}originRequest.zip"
+
+  source {
+    content  = file("${path.module}/files/originRequest.js")
+    filename = "originRequest.js"
+  }
+
+  source {
+    content  = <<EOF
+exports.env = {redirectsJson: "${jsonencode(var.redirects)}"};
+EOF
+    filename = "environment.js"
+  }
+}
+
+resource "aws_lambda_function" "lambda_redirects" {
+  for_each = data.archive_file.lambda_origin_request
+
+  description      = "Lambda@Edge function to handle redirects on cloudfront requests"
+  filename         = data.archive_file.lambda_origin_request.output_path
+  function_name    = "${var.deployment_name}-lambda-handle-redirects"
+  role             = aws_iam_role.iam_for_lambda_edge.arn
+  handler          = "originRequest.redirect"
+  runtime          = "nodejs10.x"
+  source_code_hash = data.archive_file.lambda_origin_request.output_base64sha256
+  timeout          = 2
+  memory_size      = 128
+  publish          = true
+  provider         = aws.us-east-1
+}
+
 resource "aws_iam_role" "iam_for_lambda_edge" {
   name               = "${var.deployment_name}-iam_for_lambda_edge"
   provider           = aws.us-east-1

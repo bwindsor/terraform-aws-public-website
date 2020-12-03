@@ -44,6 +44,15 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
       lambda_arn   = aws_lambda_function.lambda_add_security_headers.qualified_arn
       include_body = false
     }
+
+    dynamic "lambda_function_association" {
+      for_each = data.archive_file.lambda_origin_request
+      content {
+        event_type = "origin-request"
+        lambda_arn = aws_lambda_function.lambda_redirects[lambda_function_association.key].qualified_arn
+        include_body = false
+      }
+    }
   }
 
   price_class = "PriceClass_100"
