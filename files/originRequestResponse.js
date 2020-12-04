@@ -1,5 +1,6 @@
 'use strict';
-const environment = require('./environment.js').env;
+const fs = require('fs');
+const environment = JSON.parse(fs.readFileSync('environment.json', 'utf8'));
 
 let csp = [];
 for (let p in environment.cspData) {

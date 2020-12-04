@@ -8,34 +8,17 @@ data "archive_file" "lambda_origin_request_response" {
   }
 
   source {
-    content  = <<EOF
-exports.env = {cspData: {
-    default: [
-        "'self'",
-        "${join("\",\n\"", var.csp_allow_default)}",
-    ],
-    script: [
-        "'self'"
-    ],
-    style: [
-        "'self'",
-        "${join("\",\n\"", var.csp_allow_style)}",
-    ],
-    img: [
-        "'self'",
-        "${join("\",\n\"", var.csp_allow_img)}",
-    ],
-    font: [
-        "'self'",
-        "${join("\",\n\"", var.csp_allow_font)}",
-    ],
-    frame: [
-        "'self'",
-        "${join("\",\n\"", var.csp_allow_frame)}",
-    ]
-}};
-EOF
-    filename = "environment.js"
+    content = jsonencode({
+      cspData = {
+        default = concat(["'self'"], var.csp_allow_default),
+        script = concat(["'self'"], var.csp_allow_script),
+        style = concat(["'self'"], var.csp_allow_style),
+        img = concat(["'self'"], var.csp_allow_img),
+        font = concat(["'self'"], var.csp_allow_font),
+        frame = concat(["'self'"], var.csp_allow_frame),
+      }
+    })
+    filename = "environment.json"
   }
 }
 
@@ -65,10 +48,10 @@ data "archive_file" "lambda_origin_request" {
   }
 
   source {
-    content  = <<EOF
-exports.env = {redirectsJson: "${jsonencode(var.redirects)}"};
-EOF
-    filename = "environment.js"
+    content  = jsonencode({
+      redirects = var.redirects
+    })
+    filename = "environment.json"
   }
 }
 

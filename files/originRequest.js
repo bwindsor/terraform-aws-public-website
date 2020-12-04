@@ -1,7 +1,8 @@
 'use strict';
-const environment = require('./environment.js').env;
+const fs = require('fs');
+const environment = JSON.parse(fs.readFileSync('environment.json', 'utf8'));
 
-const r = JSON.parse(environment.redirectsJson);
+const r = environment.redirects;
 const redirects = {};
 for (let i = 0; i < r.length; i++) {
     redirects[r[i].source] = r[i].target;
