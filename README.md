@@ -52,3 +52,4 @@ Ensure environment variables `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` are
 ### Outputs
 * **url** The URL on which the home page of the website can be reached
 * **alternate_urls** Alternate URLs which also point to the same home page as *url* does
+
