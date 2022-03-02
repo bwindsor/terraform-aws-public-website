@@ -28,7 +28,7 @@ resource "aws_lambda_function" "lambda_add_security_headers" {
   function_name    = "${var.deployment_name}-lambda-add-security-headers"
   role             = aws_iam_role.iam_for_lambda_edge.arn
   handler          = "originRequestResponse.addHeaders"
-  runtime          = "nodejs10.x"
+  runtime          = "nodejs14.x"
   source_code_hash = data.archive_file.lambda_origin_request_response.output_base64sha256
   timeout          = 2
   memory_size      = 128
@@ -63,7 +63,7 @@ resource "aws_lambda_function" "lambda_redirects" {
   function_name    = "${var.deployment_name}-lambda-handle-redirects"
   role             = aws_iam_role.iam_for_lambda_edge.arn
   handler          = "originRequest.redirect"
-  runtime          = "nodejs10.x"
+  runtime          = "nodejs14.x"
   source_code_hash = each.value.output_base64sha256
   timeout          = 2
   memory_size      = 128
